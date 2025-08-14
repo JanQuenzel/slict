@@ -1,0 +1,48 @@
+<launch>
+
+      <arg name="rviz" default="false" />
+      <param name="/use_sim_time" value="true" />
+
+      <arg name="autorun" default="0"/>
+      <arg name="loop_en" default="0"/>
+
+      <!-- Enable prior map -->
+      <arg name="use_prior_map" default="0"/>
+
+      <!-- Directory to log the bundle adjustment poses, pointclouds, and others-->
+      <arg name="exp_log_dir" default="/tmp/slict_logs/oxford"/>
+
+      <!-- Priormap file -->
+      <arg name="prior_map_dir" default=""/>
+
+      <!-- STD descriptor for relocalization -->
+      <arg name="descriptor_path" default=""/>
+
+      <!-- Load the param -->
+      <rosparam file="$(find slict)/config/oxford.yaml" command="load"/>
+      <!-- Set some exp related params -->
+      <param name="/autoexit" type="int"    value="$(arg autorun)" />
+      <param name="/loop_en"  type="int"    value="$(arg loop_en)" />
+      <param name="/log_dir"  type="string" value="$(arg exp_log_dir)" />
+
+      <!-- Run the sensor sync -->
+      <node pkg="slict" required="true" type="slict_sensorsync" name="slict_sensorsync" respawn="false" output="log"/>
+
+      <!-- Run the Estimator -->
+      <param name="/prior_map_dir"  type="string" value="$(arg prior_map_dir)" />
+      <param name="/use_prior_map"  type="int"    value="$(arg use_prior_map)" />
+      <param name="/show_report"    type="int"    value="0"/>
+      <param name="/slam_ref_frame" type="string" value="odom"/>
+      <node pkg="slict" required="true" type="slict_estimator" name="slict_estimator" respawn="false" output="screen"/>
+
+      <!-- Run the imu predictor -->
+      <node pkg="slict" type="slict_imu_odom" name="slict_imu_odom" respawn="true" output="screen"/>
+
+      <!--- Run Rviz-->
+      <group if="$(arg rviz)">
+        <node pkg="rviz" type="rviz" name="rviz" respawn="true" output="log" args="-d $(find slict)/launch/oxford.rviz" />
+      </group>
+
+      <!-- <node pkg="tf" type="static_transform_publisher" name="base2view" args="0 0 0 0 0 0 world local 1"/> -->
+
+</launch>

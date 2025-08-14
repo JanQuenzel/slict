@@ -1219,6 +1219,8 @@ public:
                 return ImuSample(t, gyro, acce);
             }
         }
+        throw std::runtime_error("empty interpolate!");
+        return ImuSample(0, Vector3d::Zero(), Vector3d::Zero());
     }
 
     ImuSample& operator[](size_t i)
@@ -1509,6 +1511,8 @@ public:
                 }
             }
         }
+        throw std::runtime_error("nope! no tf...");
+        return mytf(Quaternd::Identity(), Vector3d::Zero());
     }
 
     double getStartTime()

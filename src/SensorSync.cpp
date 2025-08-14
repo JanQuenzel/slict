@@ -156,7 +156,7 @@ public:
 
             // Subscribe to the lidar topic
             lidar_sub.push_back(nh_ptr->subscribe<sensor_msgs::PointCloud2>
-                                            (lidar_topic[i], 100,
+                                            (lidar_topic[i], 2,
                                              boost::bind(&SensorSync::PcHandler, this,
                                                          _1, i, extrinsicTf(3, 2), (int)extrinsicTf(3, 3))));
         }
@@ -176,7 +176,7 @@ public:
         // Advertise lidar topic
         string merged_lidar_topic;
         nh_ptr->getParam("/merged_lidar_topic", merged_lidar_topic);
-        merged_pc_pub = nh_ptr->advertise<sensor_msgs::PointCloud2>(merged_lidar_topic, 100);
+        merged_pc_pub = nh_ptr->advertise<sensor_msgs::PointCloud2>(merged_lidar_topic, 2);
 
         /* #endregion Lidar -----------------------------------------------------------------------------------------*/
 
@@ -205,7 +205,7 @@ public:
         t_B_I = extrinsicTf.block<3, 1>(0, 3);
 
         // Subscribe to the IMU topic
-        imu_sub = nh_ptr->subscribe<sensor_msgs::Imu>(imu_topic, 10000, &SensorSync::ImuHandler, this);
+        imu_sub = nh_ptr->subscribe<sensor_msgs::Imu>(imu_topic, 50, &SensorSync::ImuHandler, this);
 
         /* #endregion IMU -------------------------------------------------------------------------------------------*/
 

@@ -54,7 +54,7 @@ N_SUB_SEG:          4
 # Spline order
 SPLINE_N:           4
 # Knot length
-deltaT:             0.02
+deltaT:             0.01
 # Period at the beginning of the spline to fix
 start_fix_span:     0.0
 # Period at the end of the spline to fix
@@ -70,9 +70,9 @@ use_ceres:          0
 
 # Downsampling grid size, chose -1 for no downsampling
 leaf_size:          0.1           # Downsample scale of input pointcloud, also the scale of ufomap leaf
-assoc_spacing:      0.8
+assoc_spacing:      0.4
 surfel_map_depth:   16
-surfel_min_point:   6
+surfel_min_point:   5
 surfel_min_depth:   1
 surfel_query_depth: 7             # Equal to Dmax + 1. Dmax is defined in the paper
 surfel_intsect_rad: 0.1           # r in the the paper
@@ -109,7 +109,7 @@ trustRegType:       "lm"
 linAlgbLib:         "eigen" 
 max_solve_time:     0.3
 max_iterations:     30
-ensure_real_time:   0
+ensure_real_time:   1
 find_factor_cost:   1
 fit_spline:         0
 # Damping factor for the LM method
@@ -120,17 +120,18 @@ fuse_lidar:         1
 fuse_imu:           1
 fuse_poseprop:      0
 fuse_velprop:       0
+fuse_marg:          1
 
 regularize_imu:     0
 imu_init_time:      0.5
-lite_redeskew:      0
+lite_redeskew:      1
 max_outer_iters:    3
-max_lidar_factor:   4000  # Maximum number of lidar factors
+max_lidar_factor:   2000  # Maximum number of lidar factors
 dj_thres:           0.0
 dx_thres:           0.5
 
 # Loop closure parameters
-loop_en:            1
+loop_en:            0
 loop_kf_nbr:        20    # Number of neighbour to check for loop closure
 loop_kfid_mindiff:  20    # Only check for loop when keyframes have this much difference
 
@@ -148,12 +149,12 @@ loop_weight:        0.05
 publish_map:        0
 
 # Terminal outputs
-show_report:        1
-show_preop_times:   1
-show_lioop_times:   1
+show_report:        0
+show_preop_times:   0
+show_lioop_times:   0
 
 # Log directory
-log_dir:            "/home/tmn/slict_log/oxford"
+log_dir:            "/tmp/slict_log/oxford"
 
 # Configurations for relocalization
 relocalization:
@@ -198,4 +199,4 @@ relocalization:
   pose_percentile_thres:      0.7
   priormap_viz_res:           0.2
   marginalize_new_points:     0
-  ioa_max_iter:               40
+  ioa_max_iter:               20

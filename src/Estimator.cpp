@@ -139,6 +139,7 @@ auto PredProto = ufopred::HasSurfel()
 typedef decltype(PredProto) PredType;
 
 typedef Sophus::SE3d SE3d;
+std::shared_ptr<std::ofstream> posesFile = nullptr;
 
 class Estimator
 {
@@ -627,8 +628,8 @@ public:
             linAlgbLib = ceres::DenseLinearAlgebraLibraryType::EIGEN;
         else if(linAlgbLib_ == "lapack")
             linAlgbLib = ceres::DenseLinearAlgebraLibraryType::LAPACK;
-        else if(linAlgbLib_ == "cuda")
-            linAlgbLib = ceres::DenseLinearAlgebraLibraryType::CUDA;
+        //else if(linAlgbLib_ == "cuda")
+        //    linAlgbLib = ceres::DenseLinearAlgebraLibraryType::CUDA;
         else
             linAlgbLib = ceres::DenseLinearAlgebraLibraryType::EIGEN;
         printf(KYEL "/linAlgbLib: %d. %s\n" RESET, linAlgbLib, linAlgbLib_.c_str());
@@ -694,7 +695,7 @@ public:
         publish_map = GetBoolParam("/publish_map", true);
 
         // Subscribe to the lidar-imu package
-        data_sub = nh_ptr->subscribe("/sensors_sync", 100, &Estimator::DataHandler, this);
+        data_sub = nh_ptr->subscribe("/sensors_sync", 2, &Estimator::DataHandler, this);
 
         // Advertise the outputs
         kfcloud_pub = nh_ptr->advertise<sensor_msgs::PointCloud2>("/kfcloud", 10);
@@ -1971,6 +1972,7 @@ public:
             static ros::Publisher tlog_pub = nh_ptr->advertise<slict::TimeLog>("/time_log", 100);
             tlog_pub.publish(tlog);
         }
+        return true;
     }
 
     void PublishAssocCloud(vector<lidarFeaIdx> &featureSelected, deque<vector<LidarCoef>> &SwLidarCoef)
@@ -4455,6 +4457,16 @@ public:
             PublishOdom(opt_odom_pub, sfPos.back().back(), sfQua.back().back(),
                         sfVel.back().back(), SwPropState.back().back().gyr.back(), SwPropState.back().back().acc.back(),
                         sfBig.back().back(), sfBia.back().back(), ros::Time(SwTimeStep.back().back().final_time), slam_ref_frame);
+
+            {
+                // write to file:
+                if ( ! posesFile ) posesFile = std::make_shared<std::ofstream>("./slict_after_map_poses.txt");
+                if( posesFile && posesFile->is_open() )
+                {
+                     (*posesFile) << (ros::Time(SwTimeStep.back().back().final_time).toNSec()) << " " << sfPos.back().back().x() << " " << sfPos.back().back().y() << " " << sfPos.back().back().z()
+                                  << " " << sfQua.back().back().x() << " " << sfQua.back().back().y() << " " << sfQua.back().back().z() << " " << sfQua.back().back().w() << std::endl;
+                }
+            }
 
             // Publish the odom at sub segment ends
             for(int i = 0; i < N_SUB_SEG; i++)

@@ -1782,7 +1782,8 @@ void STDescManager::PlaneGeomrtricIcp(
         input_cloud->push_back(pi);
     }
     kd_tree->setInputCloud(input_cloud);
-    ceres::Manifold *quaternion_manifold = new ceres::EigenQuaternionManifold;
+    //ceres::Manifold *quaternion_manifold = new ceres::EigenQuaternionManifold;
+    ceres::EigenQuaternionParameterization *quaternion_manifold = new ceres::EigenQuaternionParameterization;
     ceres::Problem problem;
     ceres::LossFunction *loss_function = nullptr;
     Matrix3d rot = transform.second;

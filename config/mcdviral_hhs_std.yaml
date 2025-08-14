@@ -56,9 +56,9 @@ BG_BOUND:           [ 0.3,  0.3,  0.4]
 BA_BOUND:           [ 0.3,  0.3,  0.4]
 
 # Number of packets to process at time
-WINDOW_SIZE:        5
+WINDOW_SIZE:        3
 # Number of substates to give to each packet
-N_SUB_SEG:          16
+N_SUB_SEG:          4
 # Spline order
 SPLINE_N:           4
 # Knot length
@@ -68,7 +68,7 @@ start_fix_span:     0.0
 # Period at the end of the spline to fix
 final_fix_span:    -1.0
 # Steps to reassociate
-reassociate_steps:  4
+reassociate_steps:  2
 # Deskew choice, 0 for IMU prop, 1 for SPLINE, 1 for before and 1 for after
 deskew_method:      [ 0, 0 ]
 # Rate of doing reassociation
@@ -80,20 +80,20 @@ use_ceres:          0
 leaf_size:          0.1           # Downsample scale of input pointcloud, also the scale of ufomap leaf
 assoc_spacing:      0.4
 surfel_map_depth:   16
-surfel_min_point:   6
+surfel_min_point:   5
 surfel_min_depth:   1
 surfel_query_depth: 7             # Equal to Dmax + 1. Dmax is defined in the paper
-surfel_intsect_rad: 0.2           # r in the the paper
-surfel_min_plnrty:  0.4
+surfel_intsect_rad: 0.1           # r in the the paper
+surfel_min_plnrty:  0.2
 use_ufm:            1
 
 # Distance to surfel and min score thresholds
-dis_to_surfel_max:  0.3
+dis_to_surfel_max:  0.5
 score_min:          0.0
 
 # Downsample coefficient of lidar scans, ds_rate = n means keep every n-th point.
 ds_rate:            [
-                      2
+                      4
                       # ,
                       # 1
                     ]
@@ -102,7 +102,7 @@ ds_rate:            [
 sweep_len:          1
 
 # Threshold to add new keyframe
-kf_min_dis:         1.0
+kf_min_dis:         5.0
 kf_min_angle:       20
 refine_kf:          0
 
@@ -116,7 +116,7 @@ linSolver:          "snc"
 # Trust region strategy: "lm", "dogleg"
 trustRegType:       "lm"
 # Linear Algebra library used: "eigen", "lapack", "cuda"
-linAlgbLib:         "eigen" 
+linAlgbLib:         "eigen"
 max_solve_time:     0.3
 max_iterations:     30
 ensure_real_time:   1
@@ -134,8 +134,8 @@ fuse_marg:          1
 
 regularize_imu:     0
 imu_init_time:      0.5
-lite_redeskew:      0
-max_outer_iters:    5
+lite_redeskew:      1
+max_outer_iters:    3
 max_lidar_factor:   2000  # Maximum number of lidar factors
 dj_thres:           0.0
 dx_thres:           0.5

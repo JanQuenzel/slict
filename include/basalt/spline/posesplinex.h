@@ -44,6 +44,7 @@ typedef basalt::Se3Spline<9> PoseSpline9;
 #define SPLINE_GET(SF, ...)                    \
     switch(X)                                  \
     {                                          \
+        default:                               \
         case(4): return traj4.SF(__VA_ARGS__); \
         case(5): return traj5.SF(__VA_ARGS__); \
         case(6): return traj6.SF(__VA_ARGS__); \
