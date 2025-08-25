@@ -54,7 +54,7 @@ N_SUB_SEG:          4
 # Spline order
 SPLINE_N:           4
 # Knot length
-deltaT:             0.01
+deltaT:             0.02
 # Period at the beginning of the spline to fix
 start_fix_span:     0.0
 # Period at the end of the spline to fix
